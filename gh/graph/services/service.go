@@ -28,6 +28,7 @@ type services struct {
 	*repositoryService
 	*issueService
 	*pullRequestService
+	*projectService
 	*nodeService
 }
 
@@ -37,6 +38,7 @@ func New(exec boil.ContextExecutor) Services {
 		repositoryService:  &repositoryService{exec: exec},
 		issueService:       &issueService{exec: exec},
 		pullRequestService: &pullRequestService{exec: exec},
+		projectService:     &projectService{exec: exec},
 		nodeService:        &nodeService{},
 	}
 }
@@ -56,6 +58,8 @@ func (s *services) GetNodeByID(ctx context.Context, id string) (model.Node, erro
 		return s.getIssueByID(ctx, id)
 	case nodeTypePullRequest:
 		return s.getPullRequestByID(ctx, id)
+	case nodeTypeProject:
+		return s.getProjectByID(ctx, id)
 	}
 
 	return nil, fmt.Errorf("id type %d is not supported", t)
