@@ -46,6 +46,8 @@ func (s *services) GetNodeByID(ctx context.Context, id string) (model.Node, erro
 	switch t {
 	case nodeTypeUser:
 		return s.getUserByID(ctx, id)
+	case nodeTypeRepository:
+		return s.getRepositoryByID(ctx, id)
 	}
 
 	return nil, fmt.Errorf("id type %d is not supported", t)
