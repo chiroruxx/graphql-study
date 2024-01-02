@@ -16,9 +16,14 @@ type RepositoryService interface {
 	GetRepositoryByNameAndOwner(ctx context.Context, name, owner string) (*model.Repository, error)
 }
 
+type ProjectService interface {
+	AddProjectItem(ctx context.Context, input *model.AddProjectV2ItemByIDInput) (*model.AddProjectV2ItemByIDPayload, error)
+}
+
 type Services interface {
 	UserService
 	RepositoryService
+	ProjectService
 
 	GetNodeByID(ctx context.Context, id string) (model.Node, error)
 }
@@ -29,7 +34,6 @@ type services struct {
 	*issueService
 	*pullRequestService
 	*projectService
-	*nodeService
 }
 
 func New(exec boil.ContextExecutor) Services {
@@ -39,12 +43,11 @@ func New(exec boil.ContextExecutor) Services {
 		issueService:       &issueService{exec: exec},
 		pullRequestService: &pullRequestService{exec: exec},
 		projectService:     &projectService{exec: exec},
-		nodeService:        &nodeService{},
 	}
 }
 
 func (s *services) GetNodeByID(ctx context.Context, id string) (model.Node, error) {
-	t, err := s.getTypeOfNode(id)
+	t, err := getTypeOfNode(id)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +63,7 @@ func (s *services) GetNodeByID(ctx context.Context, id string) (model.Node, erro
 		return s.getPullRequestByID(ctx, id)
 	case nodeTypeProject:
 		return s.getProjectByID(ctx, id)
+	default:
+		return nil, fmt.Errorf("id type %d is not supported", t)
 	}
-
-	return nil, fmt.Errorf("id type %d is not supported", t)
 }

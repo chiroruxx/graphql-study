@@ -13,11 +13,10 @@ const (
 	nodeTypeIssue
 	nodeTypePullRequest
 	nodeTypeProject
+	nodeTypeProjectItem
 )
 
-type nodeService struct{}
-
-func (u *nodeService) getTypeOfNode(id string) (nodeType, error) {
+func getTypeOfNode(id string) (nodeType, error) {
 	split := strings.Split(id, "_")
 	if len(split) < 2 {
 		return nodeType(-1), fmt.Errorf("invalid id %s", id)
@@ -28,6 +27,8 @@ func (u *nodeService) getTypeOfNode(id string) (nodeType, error) {
 		return nodeTypeIssue, nil
 	case "PJ":
 		return nodeTypeProject, nil
+	case "PVTI":
+		return nodeTypeProjectItem, nil
 	case "PR":
 		return nodeTypePullRequest, nil
 	case "REPO":
