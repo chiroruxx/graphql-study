@@ -22,7 +22,7 @@ type userService struct {
 
 func (u *userService) GetUserByName(ctx context.Context, name string) (*model.User, error) {
 	user, err := db.Users(
-		qm.Select(db.UserTableColumns.ID, db.UserTableColumns.Name),
+		u.selectColumns(),
 		db.UserWhere.Name.EQ(name),
 	).One(ctx, u.exec)
 
@@ -31,4 +31,21 @@ func (u *userService) GetUserByName(ctx context.Context, name string) (*model.Us
 	}
 
 	return convertUser(user), nil
+}
+
+func (u *userService) getUserByID(ctx context.Context, id string) (*model.User, error) {
+	user, err := db.Users(
+		u.selectColumns(),
+		db.UserWhere.ID.EQ(id),
+	).One(ctx, u.exec)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return convertUser(user), nil
+}
+
+func (u *userService) selectColumns() qm.QueryMod {
+	return qm.Select(db.UserTableColumns.ID, db.UserTableColumns.Name)
 }

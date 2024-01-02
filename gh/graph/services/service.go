@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/chiroruxxxx/graphql-study/gh/graph/model"
 	"github.com/volatiletech/sqlboiler/v4/boil"
@@ -18,16 +19,34 @@ type RepositoryService interface {
 type Services interface {
 	UserService
 	RepositoryService
+
+	GetNodeByID(ctx context.Context, id string) (model.Node, error)
 }
 
 type services struct {
 	*userService
 	*repositoryService
+	*nodeService
 }
 
 func New(exec boil.ContextExecutor) Services {
 	return &services{
 		userService:       &userService{exec: exec},
 		repositoryService: &repositoryService{exec: exec},
+		nodeService:       &nodeService{},
 	}
+}
+
+func (s *services) GetNodeByID(ctx context.Context, id string) (model.Node, error) {
+	t, err := s.getTypeOfNode(id)
+	if err != nil {
+		return nil, err
+	}
+
+	switch t {
+	case nodeTypeUser:
+		return s.getUserByID(ctx, id)
+	}
+
+	return nil, fmt.Errorf("id type %d is not supported", t)
 }
