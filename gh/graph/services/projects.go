@@ -16,7 +16,7 @@ func convertProject(project *db.Project) *model.ProjectV2 {
 	return &model.ProjectV2{
 		ID:    project.ID,
 		Title: project.Title,
-		URL:   project.URL,
+		URL:   mustParseURL(project.URL),
 		//Number: project.Number,
 		//Items:  project.Items,
 		//Owner:  project.Owner,

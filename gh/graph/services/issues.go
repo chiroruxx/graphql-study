@@ -12,7 +12,7 @@ import (
 func convertIssue(issue *db.Issue) *model.Issue {
 	return &model.Issue{
 		ID:    issue.ID,
-		URL:   issue.URL,
+		URL:   mustParseURL(issue.URL),
 		Title: issue.Title,
 		//Closed: issue.Closed,
 		//Number: issue.Number,

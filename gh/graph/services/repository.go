@@ -14,7 +14,7 @@ func convertRepository(repository *db.Repository) *model.Repository {
 		ID: repository.ID,
 		//Owner:        repository.Owner,
 		Name:      repository.Name,
-		CreatedAt: repository.CreatedAt.String(),
+		CreatedAt: repository.CreatedAt,
 		//Issue:        repository.Issues(),
 		//Issues:       repository.Issues(),
 		//PullRequest:  repository.Pullrequests(),

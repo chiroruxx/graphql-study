@@ -15,7 +15,7 @@ func convertPullRequest(pr *db.Pullrequest) *model.PullRequest {
 		BaseRefName: pr.BaseRefName,
 		//Closed:      pr.Closed,
 		HeadRefName: pr.HeadRefName,
-		URL:         pr.URL,
+		URL:         mustParseURL(pr.URL),
 		//Number: pr.Number,
 		//Repository: pr.Repository,
 		//ProjectItems: pr.ProjectItems
